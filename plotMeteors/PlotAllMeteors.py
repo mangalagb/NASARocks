@@ -1,12 +1,8 @@
-import pandas as pd
-import json
 import matplotlib.pyplot as plt
-import math
 import mplleaflet
-import numpy as np
+import pandas as pd
 
-
-data = pd.read_csv('Meteorite_Landings.csv')
+data = pd.read_csv('../data/Meteorite_Landings.csv')
 meteors_raw_data = data[:]
 
 ax = []
