@@ -1,6 +1,7 @@
 import pandas as pd
 from geopy.extra.rate_limiter import RateLimiter
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
 
 data = pd.read_csv("/home/gowri/Documents/workspace/NASARocks/data/Meteorite_Landings.csv")
 meteors_raw_data = data[:]
@@ -28,7 +29,7 @@ for index, row in meteors.iterrows():
         address = result.raw["address"]
         country = address["country"]
         print(country, index)
-    except:
+    except GeocoderTimedOut:
         print(index)
     countries.append(country)
 

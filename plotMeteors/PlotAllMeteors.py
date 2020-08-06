@@ -1,22 +1,24 @@
-import matplotlib.pyplot as plt
-import mplleaflet
+from folium.plugins import MarkerCluster
 import pandas as pd
+import folium
 
-data = pd.read_csv('../data/Meteorite_Landings.csv')
-meteors_raw_data = data[:]
+meteors_raw_data = pd.read_csv("/home/gowri/Documents/workspace/NASARocks/data/Meteorite_Landings.csv")
+meteors = meteors_raw_data.dropna(subset=["reclong", "reclat"]).drop_duplicates(subset=["reclong", "reclat"])
 
-ax = []
-meteors = meteors_raw_data.drop_duplicates(subset=["reclong", "reclat"])
+map = folium.Map(tiles='cartodbpositron', zoom_start=5)
+marker_cluster = MarkerCluster().add_to(map)
 
 for index, row in meteors.iterrows():
-    longitude = row['reclong']
-    latitude = row['reclat']
     name = row["name"]
+    year = str(row["year"])
+    latitude = row['reclat']
+    longitude = row['reclong']
 
-    if longitude and latitude and longitude != 0 and latitude != 0 and not pd.isnull(longitude) and not pd.isnull(latitude):
-        ax = plt.plot(longitude, latitude, marker='o', color='Red', markersize=10)
-        #print(name, longitude, latitude)
+    popup_text = '<h3 style="color:green;">' + name + '</h3>'
+    if year.lower() != "nan":
+        popup_text = popup_text + ", " + year
 
+    folium.Marker(location=[latitude, longitude], tooltip=popup_text).add_to(marker_cluster)
 
-print("drawing map")
-mplleaflet.show(fig=ax[0].figure)
+    print(index, popup_text)
+
